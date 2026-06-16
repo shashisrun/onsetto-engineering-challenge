@@ -59,9 +59,9 @@ def test_transport_attaches_bearer_token_without_logging_body() -> None:
         http_transport=httpx.MockTransport(handler),
     )
 
-    transport.request("GET", "/me", bearer_token="secret-token")
+    transport.request("GET", "/me", bearer_token="fixture-token")
 
-    assert seen_authorization == "Bearer secret-token"
+    assert seen_authorization == "Bearer fixture-token"
 
 
 def test_transport_closes_client_when_used_as_context_manager() -> None:

@@ -39,7 +39,7 @@ def test_auth_client_completes_token_and_mfa_flow() -> None:
 
     client = build_auth_client(httpx.MockTransport(handler))
 
-    challenge = client.request_mfa("candidate1@onsetto.test", "Password123!")
+    challenge = client.request_mfa("fixture-user@example.test", "fixture-password")
     token = client.verify_mfa(challenge.mfa_token, "1234")
 
     assert challenge.mfa_required is True
@@ -55,7 +55,7 @@ def test_auth_client_maps_bad_credentials_to_authentication_error() -> None:
     client = build_auth_client(httpx.MockTransport(handler))
 
     with pytest.raises(AuthenticationError, match="bad credentials"):
-        client.request_mfa("candidate1@onsetto.test", "wrong")
+        client.request_mfa("fixture-user@example.test", "wrong")
 
 
 def test_auth_client_maps_bad_mfa_to_mfa_error() -> None:
