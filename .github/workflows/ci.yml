@@ -25,6 +25,9 @@ jobs:
       - name: Check Python formatting
         run: black --check .
 
+      - name: Run Python typecheck
+        run: mypy api-client tests
+
       - name: Run Python tests
         run: pytest
 

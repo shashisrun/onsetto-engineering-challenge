@@ -101,12 +101,13 @@ not logged.
 pytest
 ruff check
 black --check .
+mypy api-client tests
 npm run lint
 npm run typecheck
 ```
 
-CI runs Python lint/tests and TypeScript lint/typecheck. It does not run live
-browser or API mutation flows because the sandbox account is shared.
+CI runs Python lint/typecheck/tests and TypeScript lint/typecheck. It does not
+run live browser or API mutation flows because the sandbox account is shared.
 
 ## Trade-offs
 

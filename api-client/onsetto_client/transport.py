@@ -112,10 +112,11 @@ class APITransport:
         retry_after = response.headers.get("Retry-After")
         if retry_after:
             try:
-                return max(float(retry_after), 0.0)
+                retry_after_seconds = float(retry_after)
+                return max(retry_after_seconds, 0.0)
             except ValueError:
                 pass
-        return min(2 ** (attempt - 1), 4)
+        return float(min(2 ** (attempt - 1), 4))
 
     def _message_from_payload(self, payload: dict[str, Any], fallback: str) -> str:
         for key in ("message", "error", "detail"):

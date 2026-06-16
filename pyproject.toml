@@ -15,6 +15,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "black>=24.0",
+  "mypy>=1.13",
   "pytest>=8.0",
   "ruff>=0.6",
 ]
@@ -24,6 +25,9 @@ package-dir = {"" = "api-client"}
 
 [tool.setuptools.packages.find]
 where = ["api-client"]
+
+[tool.setuptools.package-data]
+onsetto_client = ["py.typed"]
 
 [tool.black]
 line-length = 88
@@ -40,3 +44,9 @@ select = ["E", "F", "I", "UP", "B"]
 testpaths = ["tests"]
 pythonpath = ["api-client"]
 
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "api-client"
+strict = true
+warn_redundant_casts = true
+warn_unused_ignores = true
