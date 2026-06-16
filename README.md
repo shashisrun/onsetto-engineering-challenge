@@ -23,6 +23,8 @@ docs/architecture.md      Architecture notes and trade-offs
 
 ## Install
 
+Requires Python 3.11+ and Node.js 20+.
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -39,7 +41,8 @@ cp .env.example .env
 ```
 
 Set `ONSETTO_EMAIL`, `ONSETTO_PASSWORD`, and `ONSETTO_MFA_CODE` before running
-the browser automation. The banking and card defaults are fake test data only.
+the browser automation or Python API client. The banking and card defaults are
+fake test data only.
 
 ## Browser Automation
 
