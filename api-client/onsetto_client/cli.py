@@ -15,12 +15,8 @@ logging.addLevelName(SUCCESS_LEVEL, "SUCCESS")
 logging.addLevelName(logging.WARNING, "WARN")
 
 
-def _success(self: logging.Logger, message: str, *args: object) -> None:
-    if self.isEnabledFor(SUCCESS_LEVEL):
-        self._log(SUCCESS_LEVEL, message, args)
-
-
-logging.Logger.success = _success  # type: ignore[attr-defined]
+def log_success(logger: logging.Logger, message: str, *args: object) -> None:
+    logger.log(SUCCESS_LEVEL, message, *args)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -29,8 +25,12 @@ def main(argv: list[str] | None = None) -> int:
 
     configure_logging(verbose=args.verbose)
 
-    if args.command == "update-account":
-        return update_account(args)
+    try:
+        if args.command == "update-account":
+            return update_account(args)
+    except KeyboardInterrupt:
+        logging.getLogger("onsetto_client").warning("Interrupted.")
+        return 130
 
     parser.print_help()
     return 1
@@ -75,7 +75,11 @@ def configure_logging(*, verbose: bool = False) -> None:
 
 def update_account(args: argparse.Namespace) -> int:
     logger = logging.getLogger("onsetto_client")
-    settings = Settings.from_env()
+    try:
+        settings = Settings.from_env()
+    except ValueError as exc:
+        logger.error("Configuration failed: %s", exc)
+        return 2
 
     email = args.email or settings.email
     password = args.password or settings.password
@@ -94,47 +98,47 @@ def update_account(args: argparse.Namespace) -> int:
         cvc=args.cvc or settings.payment.cvc,
     )
 
-    transport = APITransport(base_url=base_url, logger=logger)
-    auth_client = AuthClient(transport)
-    account_client = AccountClient(transport)
+    with APITransport(base_url=base_url, logger=logger) as transport:
+        auth_client = AuthClient(transport)
+        account_client = AccountClient(transport)
 
-    try:
-        logger.info("Authenticating...")
-        challenge = auth_client.request_mfa(email, password)
+        try:
+            logger.info("Authenticating...")
+            challenge = auth_client.request_mfa(email, password)
 
-        logger.info("Verifying MFA...")
-        token = auth_client.verify_mfa(challenge.mfa_token, mfa_code)
-        logger.success("MFA verified.")  # type: ignore[attr-defined]
+            logger.info("Verifying MFA...")
+            token = auth_client.verify_mfa(challenge.mfa_token, mfa_code)
+            log_success(logger, "MFA verified.")
 
-        logger.info("Updating banking details.")
-        banking_confirmation = account_client.update_banking(
-            banking,
-            access_token=token.access_token,
-        )
-        logger.success(  # type: ignore[attr-defined]
-            "Banking updated: routing=%s account=%s",
-            banking_confirmation.routing_masked,
-            banking_confirmation.account_masked,
-        )
+            logger.info("Updating banking details.")
+            banking_confirmation = account_client.update_banking(
+                banking,
+                access_token=token.access_token,
+            )
+            log_success(
+                logger,
+                "Banking updated: routing=%s account=%s",
+                banking_confirmation.routing_masked,
+                banking_confirmation.account_masked,
+            )
 
-        logger.info("Updating payment method.")
-        payment_confirmation = account_client.update_payment(
-            payment,
-            access_token=token.access_token,
-        )
-        logger.success(  # type: ignore[attr-defined]
-            "Payment updated: %s ending in %s exp=%02d/%d",
-            payment_confirmation.card_brand,
-            payment_confirmation.last4,
-            payment_confirmation.exp_month,
-            payment_confirmation.exp_year,
-        )
-        return 0
-    except ValidationError as exc:
-        logger.error("Validation failed: %s", exc)
-        return 2
-    except OnsettoAPIError as exc:
-        logger.error("API request failed: %s", exc)
-        return 1
-    finally:
-        transport.close()
+            logger.info("Updating payment method.")
+            payment_confirmation = account_client.update_payment(
+                payment,
+                access_token=token.access_token,
+            )
+            log_success(
+                logger,
+                "Payment updated: %s ending in %s exp=%02d/%d",
+                payment_confirmation.card_brand,
+                payment_confirmation.last4,
+                payment_confirmation.exp_month,
+                payment_confirmation.exp_year,
+            )
+            return 0
+        except ValidationError as exc:
+            logger.error("Validation failed: %s", exc)
+            return 2
+        except OnsettoAPIError as exc:
+            logger.error("API request failed: %s", exc)
+            return 1

@@ -64,6 +64,23 @@ def test_transport_attaches_bearer_token_without_logging_body() -> None:
     assert seen_authorization == "Bearer secret-token"
 
 
+def test_transport_closes_client_when_used_as_context_manager() -> None:
+    def handler(_: httpx.Request) -> httpx.Response:
+        return httpx.Response(status_code=200, json={"ok": True})
+
+    with APITransport(
+        base_url="https://api.example.test",
+        http_transport=httpx.MockTransport(handler),
+    ) as transport:
+        result = transport.request("GET", "/health")
+        client = transport.client
+
+        assert result == {"ok": True}
+        assert client.is_closed is False
+
+    assert client.is_closed is True
+
+
 def test_transport_maps_timeout_to_api_error() -> None:
     def handler(_: httpx.Request) -> httpx.Response:
         raise httpx.TimeoutException("slow")

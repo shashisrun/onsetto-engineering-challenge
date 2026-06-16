@@ -2,13 +2,21 @@ from __future__ import annotations
 
 from datetime import date
 
+import pytest
 from onsetto_client.settings import Settings
 
 
-def test_settings_loads_defaults_and_env_overrides() -> None:
+def test_settings_requires_credentials() -> None:
+    with pytest.raises(ValueError, match="ONSETTO_EMAIL is required"):
+        Settings.from_env({}, load_dotenv_file=False)
+
+
+def test_settings_loads_required_credentials_defaults_and_env_overrides() -> None:
     settings = Settings.from_env(
         {
             "ONSETTO_EMAIL": "candidate1@onsetto.test",
+            "ONSETTO_PASSWORD": "Password123!",
+            "ONSETTO_MFA_CODE": "1234",
             "ONSETTO_CARD_EXP_MONTH": "11",
             "ONSETTO_CARD_EXP_YEAR": "2029",
         },
@@ -17,6 +25,8 @@ def test_settings_loads_defaults_and_env_overrides() -> None:
     )
 
     assert settings.email == "candidate1@onsetto.test"
+    assert settings.password == "Password123!"
+    assert settings.mfa_code == "1234"
     assert settings.api_base_url.endswith("/api-v1")
     assert settings.banking.routing_number == "021000021"
     assert settings.payment.exp_month == 11

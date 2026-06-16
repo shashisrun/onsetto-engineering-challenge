@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 import time
 from collections.abc import Callable
-from typing import Any
+from types import TracebackType
+from typing import Any, Self
 
 import httpx
 
@@ -33,11 +34,22 @@ class APITransport:
         self.max_rate_limit_retries = max_rate_limit_retries
         self.sleep = sleep
         self.logger = logger or logging.getLogger("onsetto_client")
-        self.client = httpx.Client(
+        self.client: httpx.Client = httpx.Client(
             base_url=self.base_url,
             timeout=httpx.Timeout(timeout_seconds),
             transport=http_transport,
         )
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        self.close()
 
     def close(self) -> None:
         self.client.close()

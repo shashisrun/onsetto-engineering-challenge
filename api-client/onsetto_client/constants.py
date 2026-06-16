@@ -5,10 +5,6 @@ from datetime import date
 API_BASE_URL = "https://zvyhufnwclhcvmgtqxwp.supabase.co/functions/v1/api-v1"
 CHALLENGE_URL = "https://challenge.onsetto.dev"
 
-DEFAULT_EMAIL = "candidate1@onsetto.test"
-DEFAULT_PASSWORD = "Password123!"
-DEFAULT_MFA_CODE = "1234"
-
 DEFAULT_ROUTING_NUMBER = "021000021"
 DEFAULT_ACCOUNT_NUMBER = "1234567890"
 DEFAULT_CARDHOLDER_NAME = "Test User"

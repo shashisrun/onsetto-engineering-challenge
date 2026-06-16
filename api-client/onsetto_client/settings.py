@@ -14,13 +14,17 @@ from onsetto_client.constants import (
     DEFAULT_CARD_NUMBER,
     DEFAULT_CARDHOLDER_NAME,
     DEFAULT_CVC,
-    DEFAULT_EMAIL,
-    DEFAULT_MFA_CODE,
-    DEFAULT_PASSWORD,
     DEFAULT_ROUTING_NUMBER,
     default_expiry,
 )
 from onsetto_client.models import BankingRequest, PaymentRequest
+
+
+def required_env(source: Mapping[str, str], name: str) -> str:
+    value = source.get(name)
+    if not value:
+        raise ValueError(f"{name} is required")
+    return value
 
 
 @dataclass(frozen=True)
@@ -53,9 +57,9 @@ class Settings:
         return cls(
             challenge_url=source.get("ONSETTO_CHALLENGE_URL", CHALLENGE_URL),
             api_base_url=source.get("ONSETTO_API_BASE_URL", API_BASE_URL),
-            email=source.get("ONSETTO_EMAIL", DEFAULT_EMAIL),
-            password=source.get("ONSETTO_PASSWORD", DEFAULT_PASSWORD),
-            mfa_code=source.get("ONSETTO_MFA_CODE", DEFAULT_MFA_CODE),
+            email=required_env(source, "ONSETTO_EMAIL"),
+            password=required_env(source, "ONSETTO_PASSWORD"),
+            mfa_code=required_env(source, "ONSETTO_MFA_CODE"),
             banking=BankingRequest(
                 routing_number=source.get(
                     "ONSETTO_BANK_ROUTING",
