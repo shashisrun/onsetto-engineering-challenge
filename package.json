@@ -1,0 +1,22 @@
+{
+  "name": "onsetto-engineering-challenge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "browser": "playwright test --config=browser-automation/playwright.config.ts",
+    "lint": "eslint \"browser-automation/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "format:check": "prettier --check \".github/workflows/ci.yml\" \"browser-automation/**/*.ts\" \"docs/**/*.md\" \"README.md\" \"package.json\" \"tsconfig.json\" \"eslint.config.js\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.5",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  }
+}
