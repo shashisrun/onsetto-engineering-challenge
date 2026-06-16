@@ -38,7 +38,8 @@ Optional local configuration:
 cp .env.example .env
 ```
 
-The checked-in defaults use only the sandbox account and fake test data.
+Set `ONSETTO_EMAIL`, `ONSETTO_PASSWORD`, and `ONSETTO_MFA_CODE` before running
+the browser automation. The banking and card defaults are fake test data only.
 
 ## Browser Automation
 
@@ -84,9 +85,9 @@ not logged.
 | ------------------------- | ------------------------------ |
 | `ONSETTO_CHALLENGE_URL`   | Browser challenge site URL     |
 | `ONSETTO_API_BASE_URL`    | REST API base URL              |
-| `ONSETTO_EMAIL`           | Sandbox user email             |
-| `ONSETTO_PASSWORD`        | Sandbox user password          |
-| `ONSETTO_MFA_CODE`        | MFA code; defaults to `1234`   |
+| `ONSETTO_EMAIL`           | Required sandbox user email    |
+| `ONSETTO_PASSWORD`        | Required sandbox user password |
+| `ONSETTO_MFA_CODE`        | Required sandbox MFA code      |
 | `ONSETTO_BANK_ROUTING`    | 9-digit fake routing number    |
 | `ONSETTO_BANK_ACCOUNT`    | 4-17 digit fake account number |
 | `ONSETTO_CARDHOLDER_NAME` | Fake cardholder name           |

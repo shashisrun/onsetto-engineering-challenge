@@ -7,7 +7,12 @@ export const loginSelectors = {
   verifyButtonName: "Verify",
 } as const;
 
+export const appSelectors = {
+  marketplaceHeadingName: "Marketplace",
+} as const;
+
 export const accountSelectors = {
+  accountHeadingName: "Account Settings",
   bankRouting: "#bank-routing",
   bankAccount: "#bank-account",
   bankSave: "#bank-save",
@@ -19,4 +24,5 @@ export const accountSelectors = {
   cardCvc: "#card-cvc",
   cardSave: "#card-save",
   paymentSavedInfo: "payment-saved-info",
+  lastUpdatedLabel: "Last updated:",
 } as const;

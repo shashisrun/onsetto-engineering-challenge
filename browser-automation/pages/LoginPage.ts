@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
-import { loginSelectors } from "../selectors.js";
+import { appSelectors, loginSelectors } from "../selectors.js";
 import type { ChallengeCredentials } from "../test-data.js";
 
 export class LoginPage {
@@ -24,6 +24,10 @@ export class LoginPage {
     await this.page
       .getByRole("button", { name: loginSelectors.verifyButtonName })
       .click();
-    await expect(this.page).toHaveURL(/\/app/);
+    await expect(
+      this.page.getByRole("heading", {
+        name: appSelectors.marketplaceHeadingName,
+      }),
+    ).toBeVisible();
   }
 }

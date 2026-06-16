@@ -8,8 +8,19 @@ test("updates banking details and payment method", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const accountPage = new AccountPage(page);
 
-  await loginPage.signInWithMfa(credentials);
-  await accountPage.goto();
-  await accountPage.updateBanking(bankingDetails);
-  await accountPage.updatePayment(paymentDetails);
+  await test.step("Sign in with MFA", async () => {
+    await loginPage.signInWithMfa(credentials);
+  });
+
+  await test.step("Open account settings", async () => {
+    await accountPage.goto();
+  });
+
+  await test.step("Update banking details", async () => {
+    await accountPage.updateBanking(bankingDetails);
+  });
+
+  await test.step("Update payment method", async () => {
+    await accountPage.updatePayment(paymentDetails);
+  });
 });

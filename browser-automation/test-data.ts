@@ -19,10 +19,20 @@ export type PaymentDetails = {
   cvc: string;
 };
 
+function requiredEnv(name: string): string {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`${name} is required`);
+  }
+
+  return value;
+}
+
 export const credentials: ChallengeCredentials = {
-  email: process.env.ONSETTO_EMAIL ?? "candidate1@onsetto.test",
-  password: process.env.ONSETTO_PASSWORD ?? "Password123!",
-  mfaCode: process.env.ONSETTO_MFA_CODE ?? "1234",
+  email: requiredEnv("ONSETTO_EMAIL"),
+  password: requiredEnv("ONSETTO_PASSWORD"),
+  mfaCode: requiredEnv("ONSETTO_MFA_CODE"),
 };
 
 export const bankingDetails: BankingDetails = {

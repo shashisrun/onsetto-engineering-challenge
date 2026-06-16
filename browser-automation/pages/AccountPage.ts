@@ -9,7 +9,9 @@ export class AccountPage {
   async goto(): Promise<void> {
     await this.page.goto("/app/account");
     await expect(
-      this.page.getByRole("heading", { name: "Account Settings" }),
+      this.page.getByRole("heading", {
+        name: accountSelectors.accountHeadingName,
+      }),
     ).toBeVisible();
   }
 
@@ -26,7 +28,7 @@ export class AccountPage {
     await expect(summary).toBeVisible();
     await expect(summary).toContainText(details.routingNumber.slice(-4));
     await expect(summary).toContainText(details.accountNumber.slice(-4));
-    await expect(summary).toContainText("Last updated:");
+    await expect(summary).toContainText(accountSelectors.lastUpdatedLabel);
   }
 
   async updatePayment(details: PaymentDetails): Promise<void> {
@@ -49,6 +51,6 @@ export class AccountPage {
     await expect(summary).toContainText(
       `Expires ${Number(details.expMonth)}/${details.expYear}`,
     );
-    await expect(summary).toContainText("Last updated:");
+    await expect(summary).toContainText(accountSelectors.lastUpdatedLabel);
   }
 }
