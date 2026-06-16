@@ -11,8 +11,10 @@ export default defineConfig({
   retries: 0,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
+    actionTimeout: 10_000,
     baseURL:
       process.env.ONSETTO_CHALLENGE_URL ?? "https://challenge.onsetto.dev",
+    navigationTimeout: 20_000,
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

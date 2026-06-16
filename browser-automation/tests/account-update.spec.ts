@@ -4,7 +4,9 @@ import { AccountPage } from "../pages/AccountPage.js";
 import { LoginPage } from "../pages/LoginPage.js";
 import { bankingDetails, credentials, paymentDetails } from "../test-data.js";
 
-test("updates banking details and payment method", async ({ page }) => {
+test("authenticated user can update banking details and payment method", async ({
+  page,
+}) => {
   const loginPage = new LoginPage(page);
   const accountPage = new AccountPage(page);
 

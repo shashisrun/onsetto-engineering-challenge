@@ -17,12 +17,12 @@ export class AccountPage {
 
   async updateBanking(details: BankingDetails): Promise<void> {
     await this.page
-      .locator(accountSelectors.bankRouting)
+      .getByTestId(accountSelectors.bankRouting)
       .fill(details.routingNumber);
     await this.page
-      .locator(accountSelectors.bankAccount)
+      .getByTestId(accountSelectors.bankAccount)
       .fill(details.accountNumber);
-    await this.page.locator(accountSelectors.bankSave).click();
+    await this.page.getByTestId(accountSelectors.bankSave).click();
 
     const summary = this.page.getByTestId(accountSelectors.bankSavedInfo);
     await expect(summary).toBeVisible();
@@ -33,17 +33,19 @@ export class AccountPage {
 
   async updatePayment(details: PaymentDetails): Promise<void> {
     await this.page
-      .locator(accountSelectors.cardHolder)
+      .getByTestId(accountSelectors.cardHolder)
       .fill(details.cardholderName);
     await this.page
-      .locator(accountSelectors.cardNumber)
+      .getByTestId(accountSelectors.cardNumber)
       .fill(details.cardNumber);
     await this.page
-      .locator(accountSelectors.cardExpMonth)
+      .getByTestId(accountSelectors.cardExpMonth)
       .fill(details.expMonth);
-    await this.page.locator(accountSelectors.cardExpYear).fill(details.expYear);
-    await this.page.locator(accountSelectors.cardCvc).fill(details.cvc);
-    await this.page.locator(accountSelectors.cardSave).click();
+    await this.page
+      .getByTestId(accountSelectors.cardExpYear)
+      .fill(details.expYear);
+    await this.page.getByTestId(accountSelectors.cardCvc).fill(details.cvc);
+    await this.page.getByTestId(accountSelectors.cardSave).click();
 
     const summary = this.page.getByTestId(accountSelectors.paymentSavedInfo);
     await expect(summary).toBeVisible();
